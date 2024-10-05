@@ -1,3 +1,4 @@
+const browser = globalThis.browser ?? globalThis.chrome
 const reactRoot = document.getElementById("react-root")
 
 // This function taken from Control Panel for Twitter
