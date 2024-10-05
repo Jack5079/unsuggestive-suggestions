@@ -1,0 +1,30 @@
+{
+	"$schema": "https://json.schemastore.org/chrome-manifest",
+	"manifest_version": 3,
+	"name": "Unsuggestive Suggestions",
+	"description": "Hide users of your choice from \"Who to Follow\" and tab titles on Twitter.",
+	"version": "1.0",
+	"homepage_url": "https://github.com/Jack5079/unsuggestive-suggestions",
+	"permissions": [
+		"storage"
+	],
+	"content_scripts": [
+		{
+			"matches": [
+				"https://twitter.com/*",
+				"https://mobile.twitter.com/*",
+				"https://mobile.x.com/*",
+				"https://x.com/*"
+			],
+			"js": [
+				"unsuggestive-suggestions.js"
+			]
+		}
+	],
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "unsuggestive-suggestions@jack.cab",
+			"strict_min_version": "109.0"
+		}
+	}
+}
