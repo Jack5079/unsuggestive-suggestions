@@ -1,5 +1,9 @@
 {
 	"$schema": "https://json.schemastore.org/chrome-manifest",
+	"action": {
+		"default_popup": "popup.html",
+		"default_title": "Hidden users"
+	},
 	"manifest_version": 3,
 	"name": "Unsuggestive Suggestions",
 	"description": "Hide users of your choice from \"Who to Follow\" and tab titles on Twitter.",
