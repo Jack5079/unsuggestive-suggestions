@@ -56,30 +56,42 @@ async function main() {
 		const dropdown = document
 			.getElementById("layers")
 			?.querySelector("[data-testid=Dropdown]:last-of-type")
-		if (!dropdown) return
-		if (!dropdown.querySelector("[href='/i/lists/add_member']")) return
-		if (dropdown.querySelector(".hide-user")) return
-		const id = getUserID()
-		const unhide = userIdsToHide.includes(id)
-		const clone = dropdown.lastChild.cloneNode(true)
-		const label = clone.querySelector("span")
-		label.classList.add("hide-user")
-		label.innerText = label.innerText.replace(
-			"Report",
-			unhide ? "Unhide" : "Hide"
-		)
-		clone.addEventListener("click", async () => {
-			if (userIdsToHide.includes(id)) {
-				userIdsToHide = userIdsToHide.filter((userId) => userId !== id)
-			} else {
-				userIdsToHide.push(id)
-				document.title = "X"
+		if (dropdown) {
+			if (!dropdown.querySelector("[href='/i/lists/add_member']")) return
+			if (dropdown.querySelector(".hide-user")) return
+			const id = getUserID()
+			const unhide = userIdsToHide.includes(id)
+			const clone = dropdown.lastChild.cloneNode(true)
+			const label = clone.querySelector("span")
+			label.classList.add("hide-user")
+			label.innerText = label.innerText.replace(
+				"Report",
+				unhide ? "Unhide" : "Hide"
+			)
+			clone.addEventListener("click", async () => {
+				if (userIdsToHide.includes(id)) {
+					userIdsToHide = userIdsToHide.filter((userId) => userId !== id)
+				} else {
+					userIdsToHide.push(id)
+					document.title = "X"
+				}
+				await chrome.storage.sync.set({ userIdsToHide })
+				dropdown.remove() // Not the right way to do this, I need to figure out how to trigger click outside or better yet whatever the fuck the normal buttons do
+				console.log(userIdsToHide)
+			})
+			dropdown.appendChild(clone)
+		}
+		const whoToFollow = document.querySelector('[aria-label="Who to follow"]')
+		if (whoToFollow) {
+			for (const userId of userIdsToHide) {
+				const username = getState().entities.users.entities[userId].screen_name
+				whoToFollow
+					.querySelector(
+						`[data-testid=UserCell]:has([data-testid="UserAvatar-Container-${username}"])`
+					)
+					?.remove()
 			}
-			await chrome.storage.sync.set({ userIdsToHide })
-			dropdown.remove() // Not the right way to do this, I need to figure out how to trigger click outside or better yet whatever the fuck the normal buttons do
-			console.log(userIdsToHide)
-		})
-		dropdown.appendChild(clone)
+		}
 	}).observe(reactRoot, {
 		// Insane, but works
 		subtree: true,
